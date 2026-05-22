@@ -125,3 +125,85 @@ CREATE INDEX idx_showtimes_movie ON showtimes(movie_id);
 CREATE INDEX idx_showtimes_hall ON showtimes(hall_id);
 CREATE INDEX idx_ticket_seats_showtime ON ticket_seats(showtime_id);
 CREATE INDEX idx_bookings_user ON bookings(user_id);
+
+
+/////
+
+Table members {
+  member_id integer [pk, increment]
+  full_name varchar(100) [not null]
+  email varchar(100) [unique]
+  phone varchar(20)
+}
+
+Table books {
+  book_id integer [pk, increment]
+  title varchar(200) [not null]
+  author varchar(100)
+  isbn varchar(20) [unique]
+  published_year integer
+  total_copies integer
+}
+
+Table book_loans {
+  loan_id integer [pk, increment]
+  member_id integer [ref: > members.member_id]
+  book_id integer [ref: > books.book_id]
+  borrow_date date
+  return_date date
+  status varchar(20)
+}
+
+Table categories {
+  category_id integer [pk, increment]
+  name varchar(100) [unique]
+}
+
+Table book_categories {
+  book_id integer [ref: > books.book_id]
+  category_id integer [ref: > categories.category_id]
+
+  indexes {
+    (book_id, category_id) [pk]
+  }
+}
+
+////
+
+Table departments {
+  department_id integer [pk, increment]
+  name varchar(100) [unique, not null]
+}
+
+Table students {
+  student_id integer [pk, increment]
+  full_name varchar(100) [not null]
+  email varchar(100) [unique, not null]
+  department_id integer [ref: > departments.department_id]
+  enrollment_year integer
+}
+
+Table professors {
+  professor_id integer [pk, increment]
+  full_name varchar(100) [not null]
+  email varchar(100) [unique, not null]
+  department_id integer [ref: > departments.department_id]
+}
+
+Table courses {
+  course_id integer [pk, increment]
+  title varchar(100) [not null]
+  credits integer
+  department_id integer [ref: > departments.department_id]
+  professor_id integer [ref: > professors.professor_id]
+}
+
+Table enrollments {
+  enrollment_id integer [pk, increment]
+  student_id integer [ref: > students.student_id]
+  course_id integer [ref: > courses.course_id]
+  grade varchar(5)
+}
+
+
+
